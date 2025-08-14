@@ -1,0 +1,110 @@
+let hostParts = window.location.host.split('.');
+let env = 'local';
+let blobFolder = 'qa/';
+let resFileName = '/reg.json';
+switch (hostParts[0]) {
+    case 'reg':
+        env = hostParts[0];
+        blobFolder = 'reg/';
+        resFileName = '/reg-1.0.0.102.json';
+        break;
+    case 'stg':
+        env = 'stg';
+        blobFolder = 'stg/';
+        resFileName = '/stg-1.0.0.102.json';
+        break;
+    case 'qa':
+        env = hostParts[0];
+        blobFolder = 'qa/';
+        resFileName = '/dev-1.0.0.102.json';
+        break;
+    case 'www':
+        env = 'www';
+        blobFolder = 'prod/';
+        resFileName = '/prod-1.0.0.102.json';
+        break;
+}
+let baseUrl = 'https://@@env.' + hostParts[1] + '.' + hostParts[2] + '/billing';
+baseUrl = baseUrl.replace('@@env', env);
+let imageBaseUrl = 'https://@@env.' + hostParts[1] + '.' + hostParts[2];
+imageBaseUrl = imageBaseUrl.replace('@@env', env);
+let contentPath = baseUrl + '/contents/';
+let plansBundleSrc = baseUrl + '/build/plans-1.0.0.102.bundle.js';
+let vendorBundleSrc = baseUrl + '/build/vendor.bundle-1.0.0.102.js';
+let developerBundleSrc = baseUrl + '/build/app.bundle-1.0.0.102.js';
+let appJsSrc = baseUrl + '/scripts/app-1.0.0.102.js';
+let jQuerySrc = baseUrl + '/blob/common/scripts/jquery-3.5.1.min.js'
+let fontAwesomeSrc = contentPath + blobFolder + 'jobs/fonts/fontawesome6-subset/css/all.min.css';
+let googleFontsSrc = 'https://fonts.googleapis.com/css2?family=Domine:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@400;500;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700&family=Montserrat:wght@200;300;400;500;600;700&family=Nunito:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;500;600;700;800&family=Roboto+Slab:wght@100;300;400;500;700&family=Roboto:wght@400;500;600;700&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;0,700;1,200&family=Work+Sans:wght@300;400;500;600;700&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap&family=Hanken+Grotesk:wght@100;200;300;400;500;600;700;800;900&display=swap';
+let mainCssSrc = baseUrl + '/stylesheets/rji/main-1.0.0.102.css';
+
+let localizedTextJsonPath = contentPath + blobFolder + 'remotejobs.io/localizedText-1.0.0.102.json';
+let resfilePath = contentPath + blobFolder + 'remotejobs.io/' + resFileName;
+let nrFilePath = contentPath + blobFolder + 'remotejobs.io/nr.js';
+
+let allMinCSS = contentPath + blobFolder + 'jobs/fonts/fontawesome6-subset/css/all.min.css';
+let bootstrapCSSUrl = contentPath + blobFolder + 'jobs/styles/bootstrap/bootstrap.min.css';
+
+function prefetchFiles(src, callback) {
+    let s, r, t;
+    r = false;
+    s = document.createElement('link');
+    s.rel = 'prefetch';
+    s.href = src;
+    s.onload = s.onreadystatechange = function () {
+        if (!r && (!this.readyState || this.readyState == 'complete' || this.readyState == 'loaded')) {
+            r = true;
+            callback && callback();
+        }
+    };
+    t = document.getElementsByTagName('link')[0];
+    t.parentNode.insertBefore(s, t);
+}
+
+function loadImageFiles() {
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/images/loader.png');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/images/logo-new.svg');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/images/Check2Circle.png');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/images/feature_back.png');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/images/feature_1.svg');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/images/feature_2.svg');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/images/feature_3.svg');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/images/feature_4.svg');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/images/trust-pilot-logo.svg');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/images/trust-pilot-star.svg');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/trustpiolet-blade/images/derrick.svg');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/trustpiolet-blade/images/heather.svg');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/trustpiolet-blade/images/laura.svg');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/testimonial/images/green-quotes.svg');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/testimonial/images/peach-quotes.svg');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/testimonial/images/pink-quotes.svg');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/testimonial/images/user-img-1.svg');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/testimonial/images/user-img-2.svg');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/testimonial/images/user-img-3.svg');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/sell-v2/images/circle-info-white.svg');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/sell-v2/images/sell-banner-bg.svg');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/professional/images/professional-reume.svg');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/professional/images/professional-tooltip-image.png');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/feature-img/images/curated-jobs.svg');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/feature-img/images/easily-track.svg');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/feature-img/images/jobs-alert.svg');
+    prefetchFiles(imageBaseUrl + '/blobimages/ecom/rji/feature-img/images/money-back.svg');
+
+
+    prefetchFiles(contentPath + blobFolder + 'jobs/fonts/fontawesome6-subset/webfonts/fa-solid-900.woff2');
+}
+
+prefetchFiles(plansBundleSrc);
+prefetchFiles(vendorBundleSrc);		//prefetch vendor bundle
+prefetchFiles(developerBundleSrc);	//prefetch developer bundle
+prefetchFiles(appJsSrc);	//prefetch app JS 
+prefetchFiles(jQuerySrc);
+prefetchFiles(fontAwesomeSrc);						//prefetch fontawesome CSS
+prefetchFiles(googleFontsSrc);					//prefetch googleFonts CSS
+prefetchFiles(mainCssSrc);			//prefetch main CSS 
+prefetchFiles(localizedTextJsonPath);            //prefetch ecom JSON
+prefetchFiles(resfilePath);
+prefetchFiles(nrFilePath);
+prefetchFiles(bootstrapCSSUrl); //prefetch bootstrap
+prefetchFiles(allMinCSS);
+loadImageFiles();										//prefect image files
