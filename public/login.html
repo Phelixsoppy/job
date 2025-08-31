@@ -165,8 +165,8 @@ const loginUser = () => {
                     if (userData.email === email && userData.password === password) {
                         userFound = true;
                         alert("Login successful!");
-                        window.location.href = 'index.html'; // Redirect to home page
-                        return;
+                        window.location.href = 'index.html'; 
+                        sessionStorage.setItem('user', JSON.stringify({ email: userData.email, password: userData.password }));
                     }
                 });
                 if (!userFound) {
