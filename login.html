@@ -138,7 +138,6 @@
         alert('sign in with google')
         signInWithPopup(auth, provider)
             .then((result) => {
-                console.log(result);
                 const user = result.user;
                 sessionStorage.setItem('user', JSON.stringify({email: user.email }));
                 window.location.href = 'index.html';
