@@ -29,7 +29,8 @@
                     <div style="margin: 0% 10%; display: flex; margin-left: 35%; margin-right: 5%;" class="me-auto">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="gap: 20px;">
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#" style="color: rgb(11, 219, 11);">Home</a>
+                                <a class="nav-link active" aria-current="page" href="#"
+                                    style="color: rgb(11, 219, 11);">Home</a>
                             </li>
 
                             <li class="nav-item dropdown">
@@ -38,8 +39,8 @@
                                 </a>
 
                             </li>
-                        
-                          
+
+
                     </div>
 
                     <ul style="display: flex; gap: 15px; list-style: none; padding-top: 12px; ;" id="Signupin">
@@ -56,9 +57,9 @@
 
                     </ul>
                     <div id="signout" style="display: none;">
-                        <button
-                            id="signout"
-                            style="background-color: rgb(11, 219, 11); border: none; border-radius: 5px; padding: 5px 13px;" onclick="sessionStorage.removeItem('user'); location.reload();">
+                        <button id="signout"
+                            style="background-color: rgb(11, 219, 11); border: none; border-radius: 5px; padding: 5px 13px;"
+                            onclick="sessionStorage.removeItem('user'); location.reload();">
                             Sign out
                         </button>
                     </div>
@@ -78,17 +79,18 @@
                 They use our platform to explore openings that match their skills and interests. Each day,
                 more than 140,000 job applications are submitted through our site.
             </p>
-            <div class="w-100 d-flex bg-white gap-3 py-1  me-lg-5 ps-3" style="height: 35px;">
-                <select class="w-25" id="">
-                    <option value="" class="fs-6">Country</option>
-                    <option value="" class="fs-6">USA</option>
-                    <option value="" class="fs-6">United Kingdom</option>
-                    <option value="" class="fs-6">Canada</option>
-                    <option value="" class="fs-6">Germany</option>
+            <div class="w-100 d-flex bg-white gap-3 py-1  me-lg-5 ps-3" style="height: 35px; ">
+                <select class="w-25" id="countryFilter" onchange="searchJobs()" style="border: 2px solid rgb(11, 219, 11);color: rgb(25,135,84);">
+                    <option value="" class="fs-6" style="border: 2px solid rgb(11, 219, 11)">Country</option>
+                    <option value="USA" class="fs-6" style="border: 2px solid rgb(11, 219, 11)">USA</option>
+                    <option value="United Kingdom" class="fs-6">United Kingdom</option>
+                    <option value="Canada" class="fs-6">Canada</option>
+                    <option value="Germany" class="fs-6">Germany</option>
                 </select>
-                <input class="border border-success w-50 rounded" style="border: 2px solid ;">
-                <button class="btn  d-flex justify-content-center align-items-center  px-3"
-                    style="height: 28px; min-width: 80px; background-color:  rgb(11, 219, 11);;">Search</button>
+                <input class="border border-success w-50 rounded" id="searchInput" placeholder="Search jobs..."
+                    style="border: 2px solid ;">
+                <button class="btn d-flex justify-content-center align-items-center px-3" onclick="searchJobs()"
+                    style="height: 28px; min-width: 80px; background-color: rgb(11, 219, 11);">Search</button>
             </div>
             <div class="d-flex mt-3 g-2 " style="min-width: 290px;">
                 <p class="fs-6">Popular searches: </p>
@@ -101,16 +103,20 @@
         <div class="w-100 py-3 py-lg-2 px-lg-5 my-2  ">
             <div class="pslg-5">
                 <div class="ps-lg- ">
-                    <img class="w-100 h-auto " style="min-width: 300px;" src="images/pexels-fauxels-3184360.jpg"
-                        alt="">
+                    <img class="w-100 h-auto " style="min-width: 300px;" src="images/pexels-fauxels-3184360.jpg" alt="">
                     <!-- <img class="w-50 " src="../images/pexels-tima-miroshnichenko-5439381.jpg" alt=""> -->
                 </div>
             </div>
         </div>
 
+
+
     </div>
 
-
+    <div>
+        <div id="search/selectresult">
+        </div>
+    </div>
     </div>
 
     <div class="px-lg-5 px-md-2 px-2 ">
@@ -221,6 +227,7 @@
             </div>
         </div>
     </div>
+
     <div class="d-lg-flex mx-lg-4 mx-md-2 mx-sm-1 my-4 border py-3 shadow-lg"
         style="margin-bottom:2rem; margin-top:2rem;">
         <div class="  w-100 px-2 ">
@@ -297,20 +304,204 @@
             <div class="text-center small">&copy; 2025 JobFinder. All rights reserved.</div>
         </div>
     </footer>
+
+    <!-- Simple Warning Modal -->
+    <div class="modal fade" id="warningModal" tabindex="-1" aria-labelledby="warningModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: rgb(11, 219, 11); border-bottom: none;">
+                    <h5 class="modal-title text-white fw-bold" id="warningModalLabel">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        Notice
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-4">
+                    <p id="warningMessage" class="mb-0 text-center">Warning message will appear here</p>
+                </div>
+                <div class="modal-footer border-top-0 justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn text-white" id="warningOkBtn"
+                        style="background-color: rgb(11, 219, 11);">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous">
 
     </script>
+<script type="module">
+    // Import Firebase modules
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+    import { firebaseConfig } from "./config.js";
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    let allJobs = [];
+
+    // Function to show warning modal instead of alert
+    const showWarning = (message, callback = null) => {
+        document.getElementById('warningMessage').textContent = message;
+        const modal = new bootstrap.Modal(document.getElementById('warningModal'));
+
+        // Handle OK button click
+        const okBtn = document.getElementById('warningOkBtn');
+        const newOkBtn = okBtn.cloneNode(true);
+        okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+
+        newOkBtn.addEventListener('click', () => {
+            modal.hide();
+            if (callback) callback();
+        });
+
+        modal.show();
+    };
+
+    // Load all jobs from Firebase
+    const loadJobsFromFirebase = async () => {
+        try {
+            const jobsRef = ref(database, 'availableJobs/jobs');
+            const snapshot = await get(jobsRef);
+
+            if (snapshot.exists()) {
+                const jobs = snapshot.val();
+                allJobs = Array.isArray(jobs) ? jobs : Object.values(jobs);
+            } else {
+                allJobs = [];
+            }
+        } catch (error) {
+            // Error loading jobs
+        }
+    };
+
+    // Search and filter jobs
+    const searchJobs = () => {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const countryFilter = document.getElementById('countryFilter').value;
+
+        let filteredJobs = allJobs;
+
+        // Filter by search term (title, description, location)
+        if (searchTerm) {
+            filteredJobs = filteredJobs.filter(job =>
+                job.title.toLowerCase().includes(searchTerm) ||
+                job.description.toLowerCase().includes(searchTerm) ||
+                job.location.toLowerCase().includes(searchTerm) ||
+                job.workType.toLowerCase().includes(searchTerm)
+            );
+        }
+
+        // Filter by country
+        if (countryFilter) {
+            filteredJobs = filteredJobs.filter(job =>
+                job.location.toLowerCase().includes(countryFilter.toLowerCase())
+            );
+        }
+
+        displaySearchResults(filteredJobs);
+    };
+
+    // Display search results
+    const displaySearchResults = (jobs) => {
+        const resultsContainer = document.getElementById('search/selectresult');
+
+        if (jobs.length === 0) {
+            resultsContainer.innerHTML = `
+                <div class="container mt-4">
+                    <div class="alert alert-info text-center">
+                        <h5>No jobs found</h5>
+                        <p>Try adjusting your search criteria or browse all available jobs.</p>
+                        <a href="availjob.html" class="btn btn-success">View All Jobs</a>
+                    </div>
+                </div>
+            `;
+            return;
+        }
+
+        resultsContainer.innerHTML = `
+            <div class="container mt-4">
+                <div class="row">
+                    <div class="col-12">
+                        <h3 class="mb-4">Search Results (${jobs.length} jobs found)</h3>
+                        <div class=" g-4">
+                            ${jobs.map(job => `
+                                <div class="col">
+                                    <div class="card shadow-sm h-100" style="background-color: rgb(236, 255, 236);">
+                                        <div class="card-body">
+                                            <h5 class="card-title text-success">${job.title}</h5>
+                                            <div class="d-flex my-3 flex-wrap gap-2">
+                                                <span class="badge bg-success">${job.wage}</span>
+                                                <span class="badge bg-dark">${job.workType}</span>
+                                            </div>
+                                            <h6 class="card-subtitle mb-2 text-muted">
+                                                <i class="bi bi-geo-alt"></i> ${job.location}
+                                            </h6>
+                                            <p class="card-text">${job.description.substring(0, 100)}${job.description.length > 100 ? '...' : ''}</p>
+                                            <div class="mt-auto">
+                                                <button class="btn btn-outline-success w-100" onclick="applyForJob('${job.id}')">
+                                                    Apply Now
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="text-center my-4">
+                            <button class="btn btn-success" onclick="clearResults()">Clear Results</button>
+                            <a href="availjob.html" class="btn btn-outline-success ms-2">View All Jobs</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    };
+
+    // Clear search results
+    const clearResults = () => {
+        document.getElementById('search/selectresult').innerHTML = '';
+        document.getElementById('searchInput').value = '';
+        document.getElementById('countryFilter').value = '';
+    };
+
+    // Apply for job function
+    const applyForJob = (jobId) => {
+        const user = JSON.parse(sessionStorage.getItem('user'));
+        if (user) {
+            // Store selected job in session and redirect
+            sessionStorage.setItem('selectedJobId', jobId);
+            window.location.href = 'apply.html';
+        } else {
+            showWarning('Please log in to apply for jobs', () => {
+                window.location.href = 'login.html';
+            });
+        }
+    };
+
+    // Make functions globally available
+    window.searchJobs = searchJobs;
+    window.clearResults = clearResults;
+    window.applyForJob = applyForJob;
+    window.showWarning = showWarning;
+
+    // Load jobs when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        loadJobsFromFirebase();
+    });
+</script>
+
 <script>
-
-
     document.addEventListener("DOMContentLoaded", function () {
         const log = document.getElementById("Signupin");
         const logout = document.getElementById("signout");
 
         const user = JSON.parse(sessionStorage.getItem('user'));
-        console.log(user);
 
         if (user) {
             log.style.display = 'none';
@@ -325,7 +516,7 @@
         if (user) {
             window.location.href = 'availjob.html';
         } else {
-            alert("Please log in to continue");
+            window.showWarning("Please log in to continue");
         }
     }
     const apply = () => {
@@ -333,7 +524,7 @@
         if (user) {
             window.location.href = 'apply.html';
         } else {
-            alert("Please log in to continue");
+            window.showWarning("Please log in to continue");
         }
     }
 
