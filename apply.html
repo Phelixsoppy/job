@@ -272,27 +272,27 @@
     // Function to load available jobs from Firebase
     const loadAvailableJobs = async () => {
         const jobSelect = document.getElementById('jobselect');
-        
+
         try {
             console.log('Starting to load jobs from database...');
             const dbRef = ref(database);
-            
+
             // Try multiple possible paths
             const possiblePaths = ['jobs', 'jobData/jobs', 'jobListings', 'availableJobs'];
             let jobsFound = false;
-            
+
             for (const path of possiblePaths) {
                 console.log(`Trying path: ${path}`);
                 const snapshot = await get(child(dbRef, path));
-                
+
                 if (snapshot.exists()) {
                     console.log(`Found data at path: ${path}`);
                     const data = snapshot.val();
                     console.log('Raw data:', data);
-                    
+
                     // Clear existing options
                     jobSelect.innerHTML = '<option value="">Choose a job...</option>';
-                    
+
                     if (Array.isArray(data)) {
                         // Handle array format
                         data.forEach((job, index) => {
@@ -343,7 +343,7 @@
                     }
                 }
             }
-            
+
             if (!jobsFound) {
                 console.log('No jobs found in any of the expected paths');
                 // Let's check what's actually in the root
@@ -351,7 +351,7 @@
                 if (rootSnapshot.exists()) {
                     console.log('Root database structure:', Object.keys(rootSnapshot.val()));
                 }
-                
+
                 // No jobs found, add default message
                 jobSelect.innerHTML = '<option value="">Choose a job...</option>';
                 const option = document.createElement('option');
@@ -360,24 +360,24 @@
                 option.disabled = true;
                 jobSelect.appendChild(option);
             }
-            
+
         } catch (error) {
             console.error('Error loading jobs:', error);
-            
+
             // Show error and fallback options
             jobSelect.innerHTML = '<option value="">Choose a job...</option>';
             const fallbackJobs = [
-                'Data Entry', 'Customer Service', 'Management', 
+                'Data Entry', 'Customer Service', 'Management',
                 'Marketing & Sale', 'Human Resource', 'Finance'
             ];
-            
+
             fallbackJobs.forEach(jobTitle => {
                 const option = document.createElement('option');
                 option.value = jobTitle;
                 option.textContent = jobTitle;
                 jobSelect.appendChild(option);
             });
-            
+
             console.log('Added fallback jobs due to error');
         }
     };
@@ -552,7 +552,7 @@
             e.preventDefault();
             submitApplication();
         });
-        
+
         // Load available jobs from database
         loadAvailableJobs();
     });

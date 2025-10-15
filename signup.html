@@ -91,7 +91,7 @@
                         </small>
                     </div>
 
-                    <select name="country" id="country" class="form-control w-75 mx-auto mt-3" 
+                    <select name="country" id="country" class="form-control w-75 mx-auto mt-3"
                         onchange="updatePhonePlaceholder()" onblur="validateCountry()" onfocus="hideCountryWarning()">
                         <option value="">Select your country...</option>
                         <option value="USA">USA</option>
@@ -373,14 +373,14 @@
     const updatePhonePlaceholder = () => {
         const country = document.getElementById("country").value;
         const phoneInput = document.getElementById("phone");
-        
+
         const countryCodes = {
             "USA": "+1",
             "United Kingdom": "+44",
             "Canada": "+1",
             "Germany": "+49"
         };
-        
+
         if (country && countryCodes[country]) {
             phoneInput.placeholder = `Phone Number (${countryCodes[country]})`;
         } else {
