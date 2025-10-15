@@ -148,32 +148,58 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class=" text-light mt-5 pt-4 pb-2" style="background-color: rgb(11, 219, 11);">
-        <div class="container">
-            <div class="row row-cols-1 row-cols-md-3 g-4 align-items-center">
-                <div class="col mb-3 mb-md-0 text-center text-md-start">
-                    <h5 class="fw-bold">St.Regis Admin</h5>
-                    <p class="small">Administrative panel for managing job listings and applications.</p>
-                </div>
-                <div class="col mb-3 mb-md-0 text-center">
-                    <h6 class="fw-bold">Quick Links</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="index.html" class="text-light text-decoration-none">Home</a></li>
-                        <li><a href="availjob.html" class="text-light text-decoration-none">Jobs</a></li>
-                        <li><a href="#" class="text-light text-decoration-none">Admin</a></li>
-                    </ul>
-                </div>
-                <div class="col text-center text-md-end">
-                    <h6 class="fw-bold">Admin Tools</h6>
-                    <button class="btn btn-light btn-sm me-2" onclick="exportData()">Export Data</button>
-                    <button class="btn btn-outline-light btn-sm" onclick="clearData()">Clear All</button>
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-body text-center py-5">
+                    <div class="mb-3">
+                        <svg width="80" height="80" fill="rgb(11, 219, 11)" viewBox="0 0 16 16">
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                        </svg>
+                    </div>
+                    <h5 class="fw-bold text-success mb-2" id="successTitle">Success!</h5>
+                    <p class="text-muted mb-0" id="successMessage">Operation completed successfully.</p>
                 </div>
             </div>
-            <hr class="border-light my-3">
-            <div class="text-center small">&copy; 2025 St.Regis Admin Panel. All rights reserved.</div>
         </div>
-    </footer>
+    </div>
+
+    <!-- Error Modal -->
+    <div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-body text-center py-5">
+                    <div class="mb-3">
+                        <svg width="80" height="80" fill="#dc3545" viewBox="0 0 16 16">
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
+                        </svg>
+                    </div>
+                    <h5 class="fw-bold text-danger mb-2" id="errorTitle">Error</h5>
+                    <p class="text-muted mb-0" id="errorMessage">An error occurred</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div class="modal fade" id="infoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-body text-center py-5">
+                    <div class="mb-3">
+                        <svg width="80" height="80" fill="rgb(11, 219, 11)" viewBox="0 0 16 16">
+                            <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z" />
+                        </svg>
+                    </div>
+                    <h5 class="fw-bold text-info mb-2" id="infoTitle">Information</h5>
+                    <p class="text-muted mb-0" id="infoMessage">Admin access required. Redirecting to admin login.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js">
 </script>
@@ -186,6 +212,47 @@
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
+
+    // Modal helper functions
+    const showSuccess = (title, message) => {
+        document.getElementById('successTitle').textContent = title;
+        document.getElementById('successMessage').textContent = message;
+        const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+        successModal.show();
+    };
+
+    const showError = (title, message) => {
+        document.getElementById('errorTitle').textContent = title;
+        document.getElementById('errorMessage').textContent = message;
+        const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+        errorModal.show();
+    };
+
+    const showInfo = (title, message) => {
+        document.getElementById('infoTitle').textContent = title;
+        document.getElementById('infoMessage').textContent = message;
+        const infoModal = new bootstrap.Modal(document.getElementById('infoModal'));
+        infoModal.show();
+    };
+
+    // Check admin authentication on page load
+    const checkAdminAuth = () => {
+        const adminSession = sessionStorage.getItem('adminAuthenticated');
+        
+        if (!adminSession || adminSession !== 'true') {
+            // Admin not authenticated, redirect to admin login immediately
+            window.location.href = 'adminlog.html';
+            return false;
+        }
+        
+        return true;
+    };
+
+    // Run authentication check immediately
+    if (!checkAdminAuth()) {
+        // Stop execution if not authenticated
+        throw new Error('Admin authentication required');
+    }
 
     let jobData = { jobs: [] };
     let editingJobId = null; // Track which job is being edited
@@ -200,7 +267,6 @@
     // Load jobs from Firebase Realtime Database
     const loadJobsFromFirebase = async () => {
         try {
-            console.log('Loading jobs from Firebase...');
             const jobsRef = ref(database, 'availableJobs/jobs');
             const snapshot = await get(jobsRef);
 
@@ -208,16 +274,13 @@
                 const jobs = snapshot.val();
                 // Convert object to array if needed
                 jobData.jobs = Array.isArray(jobs) ? jobs : Object.values(jobs);
-                console.log('Jobs loaded from Firebase:', jobData);
                 displayJobs();
             } else {
-                console.log('No jobs found in Firebase');
                 jobData.jobs = [];
                 displayJobs();
             }
         } catch (error) {
-            console.error('Error loading jobs from Firebase:', error);
-            alert('Error loading jobs: ' + error.message);
+            showError('Loading Error', 'Error loading jobs: ' + error.message);
         }
     };
 
@@ -271,7 +334,7 @@
         };
 
         if (!jobDetails.title || !jobDetails.wage || !jobDetails.workType || !jobDetails.location || !jobDetails.description) {
-            alert('Please fill in all fields');
+            showError('Missing Information', 'Please fill in all fields');
             return;
         }
 
@@ -282,12 +345,12 @@
                 if (jobIndex !== -1) {
                     jobData.jobs[jobIndex] = { id: editingJobId, ...jobDetails };
                 }
-                alert('✅ Job updated successfully!');
+                showSuccess('Success', 'Job updated successfully!');
             } else {
                 // Add new job
                 const newJob = { id: Date.now(), ...jobDetails };
                 jobData.jobs.push(newJob);
-                alert('✅ Job added successfully!');
+                showSuccess('Success', 'Job added successfully!');
             }
 
             // Save to Firebase
@@ -301,8 +364,7 @@
             cancelEdit();
 
         } catch (error) {
-            console.error('Error saving job:', error);
-            alert('❌ Error saving job: ' + error.message);
+            showError('Save Error', 'Error saving job: ' + error.message);
         }
     };
 
@@ -310,7 +372,7 @@
     const editJob = (jobId) => {
         const job = jobData.jobs.find(j => j.id === jobId);
         if (!job) {
-            alert('Job not found');
+            showError('Not Found', 'Job not found');
             return;
         }
 
@@ -365,12 +427,10 @@
             // Update display
             displayJobs();
 
-            console.log('Job deleted successfully');
-            alert('✅ Job deleted successfully!');
+            showSuccess('Success', 'Job deleted successfully!');
 
         } catch (error) {
-            console.error('Error deleting job:', error);
-            alert('❌ Error deleting job: ' + error.message);
+            showError('Delete Error', 'Error deleting job: ' + error.message);
             // Reload data if delete failed
             loadJobsFromFirebase();
         }
@@ -385,66 +445,65 @@
             const jobsRef = ref(database, 'availableJobs');
             await set(jobsRef, jsonData);
 
-            alert('✅ JSON data uploaded to Firebase successfully!');
+            showSuccess('Success', 'JSON data uploaded to Firebase successfully!');
             loadJobsFromFirebase(); // Reload from Firebase
 
         } catch (error) {
-            console.error('Error uploading JSON to Firebase:', error);
-            alert('❌ Error uploading JSON: ' + error.message);
+            showError('Upload Error', 'Error uploading JSON: ' + error.message);
         }
     };
 
 
 
-// DOM elements
-const applicationsList = document.getElementById('applicationsList');
-const appCount = document.getElementById('appCount');
+    // DOM elements
+    const applicationsList = document.getElementById('applicationsList');
+    const appCount = document.getElementById('appCount');
 
-// Global array
-let applicationsData = [];
+    // Global array
+    let applicationsData = [];
 
-// 🔹 Load all applications from Firebase Realtime Database
-const loadApplications = async () => {
-    try {
-        console.log('Loading applications from Firebase...');
+    // 🔹 Load all applications from Firebase Realtime Database
+    const loadApplications = async () => {
+        try {
+            console.log('Loading applications from Firebase...');
 
-        // ✅ Define reference INSIDE the function
-        const applicationsRef = ref(database, 'jobApplications');
+            // ✅ Define reference INSIDE the function
+            const applicationsRef = ref(database, 'jobApplications');
 
-        const snapshot = await get(applicationsRef);
+            const snapshot = await get(applicationsRef);
 
-        if (snapshot.exists()) {
-            const applications = snapshot.val();
+            if (snapshot.exists()) {
+                const applications = snapshot.val();
 
-            // Convert Firebase object to array
-            applicationsData = Object.keys(applications).map(key => ({
-                id: key,
-                ...applications[key]
-            }));
+                // Convert Firebase object to array
+                applicationsData = Object.keys(applications).map(key => ({
+                    id: key,
+                    ...applications[key]
+                }));
 
-            console.log('Applications loaded from Firebase:', applicationsData);
-            displayApplications();
-        } else {
-            console.log('No applications found in Firebase');
-            applicationsData = [];
-            displayApplications();
+                console.log('Applications loaded from Firebase:', applicationsData);
+                displayApplications();
+            } else {
+                console.log('No applications found in Firebase');
+                applicationsData = [];
+                displayApplications();
+            }
+        } catch (error) {
+            console.error('Error loading applications from Firebase:', error);
+            alert('Error loading applications: ' + error.message);
         }
-    } catch (error) {
-        console.error('Error loading applications from Firebase:', error);
-        alert('Error loading applications: ' + error.message);
-    }
-};
+    };
 
-// 🔹 Display applications
-const displayApplications = () => {
-    appCount.textContent = applicationsData.length;
+    // 🔹 Display applications
+    const displayApplications = () => {
+        appCount.textContent = applicationsData.length;
 
-    if (applicationsData.length === 0) {
-        applicationsList.innerHTML = '<p class="text-center text-muted">No applications available</p>';
-        return;
-    }
+        if (applicationsData.length === 0) {
+            applicationsList.innerHTML = '<p class="text-center text-muted">No applications available</p>';
+            return;
+        }
 
-    applicationsList.innerHTML = applicationsData.map(app => `
+        applicationsList.innerHTML = applicationsData.map(app => `
         <div class="card mb-3 p-3 shadow-sm">
             <h6 class="text-success mb-1">${app.fullName || 'No Name'}</h6>
             <p class="mb-1"><strong>Email:</strong> ${app.email || 'N/A'}</p>
@@ -458,7 +517,7 @@ const displayApplications = () => {
             </div>
         </div>
     `).join('');
-};
+    };
 
 
 

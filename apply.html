@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <title>Available Remote Jobs</title>
 </head>
 
@@ -40,7 +41,7 @@
 
                 </div>
 
-                 <ul style="display: flex; gap: 15px; list-style: none; padding-top: 12px;" id="Signupin">
+                <ul style="display: flex; gap: 15px; list-style: none; padding-top: 12px;" id="Signupin">
                     <li class="nav-item bg-success text-white"
                         style="border: none; border-radius: 5px; padding: 5px 13px;">
                         <a class="nav-link" href="signup.html">Register</a>
@@ -65,41 +66,71 @@
     <form class="bg-light p-4 rounded shadow-sm" style="max-width: 600px; margin: auto;">
         <div class="mb-3">
             <label for="fullname" class="form-label">Full Name</label>
-            <input type="text" class="form-control" id="fullname" name="fullname" required>
+            <input type="text" class="form-control" id="fullname" name="fullname" required onblur="validateFullName()"
+                onfocus="hideFullNameWarning()">
+            <!-- Full Name warning -->
+            <div id="fullNameWarning" class="mt-1" style="display: none;">
+                <small class="text-danger">
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                    Please enter your full name
+                </small>
+            </div>
         </div>
         <div class="mb-3">
             <label for="email" class="form-label">Email Address</label>
-            <input type="email" class="form-control" id="email" name="email" required>
+            <input type="email" class="form-control" id="email" name="email" required onblur="validateEmail()"
+                onfocus="hideEmailWarning()">
+            <!-- Email warning -->
+            <div id="emailWarning" class="mt-1" style="display: none;">
+                <small class="text-danger">
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                    Please enter your email address
+                </small>
+            </div>
         </div>
         <div class="mb-3">
             <label for="phone" class="form-label">Phone Number</label>
-            <input type="tel" class="form-control" id="phone" name="phone">
+            <input type="tel" class="form-control" id="phone" name="phone" onblur="validatePhone()"
+                onfocus="hidePhoneWarning()">
+            <!-- Phone warning -->
+            <div id="phoneWarning" class="mt-1" style="display: none;">
+                <small class="text-danger">
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                    Please enter your phone number
+                </small>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="country" class="form-label">Country</label>
+            <select class="form-select" id="country" name="country" required onblur="validateCountry()"
+                onfocus="hideCountryWarning()">
+                <option value="">Select your country...</option>
+                <option value="USA">USA</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="Canada">Canada</option>
+                <option value="Germany">Germany</option>
+            </select>
+            <!-- Country warning -->
+            <div id="countryWarning" class="mt-1" style="display: none;">
+                <small class="text-danger">
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                    Please select your country
+                </small>
+            </div>
         </div>
         <div class="mb-3">
             <label for="jobselect" class="form-label">Select Job</label>
-            <select class="form-select" id="jobselect" name="jobselect" required>
-                <option value="">Choose a job...</option>
-                <option>Austrian German Translator</option>
-                <option>Call Center Representatives</option>
-                <option>Cloud Engineering Manager</option>
-                <option>Crew member</option>
-                <option>Customer Help</option>
-                <option>Customer Service</option>
-                <option>Data Entry</option>
-                <option>Driver</option>
-                <option>Finance</option>
-                <option>Founder in Residence</option>
-                <option>Full-Time/Part-Time</option>
-                <option>Human Resource</option>
-                <option>Management</option>
-                <option>Market Research</option>
-                <option>Marketing & Sale</option>
-                <option>OpenStack Engineering Manager</option>
-                <option>Remote Nursing Assistant</option>
-                <option>Retail & Products</option>
-                <option>Senior Systems Engineer</option>
-                <option>Translator</option>
+            <select class="form-select" id="jobselect" name="jobselect" required onblur="validateJobSelect()"
+                onfocus="hideJobSelectWarning()">
+                <option value="">Loading jobs...</option>
             </select>
+            <!-- Job Selection warning -->
+            <div id="jobSelectWarning" class="mt-1" style="display: none;">
+                <small class="text-danger">
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                    Please select a job position
+                </small>
+            </div>
         </div>
         <div class="mb-3">
             <label for="resume" class="form-label">Upload Resume (PDF, DOCX)</label>
@@ -155,19 +186,268 @@
             <div class="text-center small">&copy; 2025 JobFinder. All rights reserved.</div>
         </div>
     </footer>
+
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-body text-center py-5">
+                    <div class="mb-3">
+                        <svg width="80" height="80" fill="rgb(11, 219, 11)" viewBox="0 0 16 16">
+                            <path
+                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                        </svg>
+                    </div>
+                    <h5 class="fw-bold text-success mb-2">Application Submitted!</h5>
+                    <p class="text-muted mb-0">Thank you for applying. We'll be in touch soon.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-body text-center py-5">
+                    <div class="mb-3">
+                        <svg width="80" height="80" fill="#dc3545" viewBox="0 0 16 16">
+                            <path
+                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
+                        </svg>
+                    </div>
+                    <h5 class="fw-bold text-danger mb-2" id="errorTitle">Error</h5>
+                    <p class="text-muted mb-0" id="errorMessage">An error occurred</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Required Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static"
+        data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-body text-center py-5">
+                    <div class="mb-3">
+                        <svg width="80" height="80" fill="rgb(11, 219, 11)" viewBox="0 0 16 16">
+                            <path
+                                d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z" />
+                        </svg>
+                    </div>
+                    <p class="text-muted mb-0">Please log in to apply for jobs.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 <script type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
     import { firebaseConfig } from "./config.js";
-    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+    import { getDatabase, ref, push, get, child } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
     import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
     const storage = getStorage(app);
+
+    // Function to show error modal
+    const showError = (title, message) => {
+        document.getElementById('errorTitle').textContent = title;
+        document.getElementById('errorMessage').textContent = message;
+        const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+        errorModal.show();
+    };
+
+    // Function to show success modal
+    const showSuccess = () => {
+        const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+        successModal.show();
+    };
+
+    // Function to load available jobs from Firebase
+    const loadAvailableJobs = async () => {
+        const jobSelect = document.getElementById('jobselect');
+        
+        try {
+            console.log('Starting to load jobs from database...');
+            const dbRef = ref(database);
+            
+            // Try multiple possible paths
+            const possiblePaths = ['jobs', 'jobData/jobs', 'jobListings', 'availableJobs'];
+            let jobsFound = false;
+            
+            for (const path of possiblePaths) {
+                console.log(`Trying path: ${path}`);
+                const snapshot = await get(child(dbRef, path));
+                
+                if (snapshot.exists()) {
+                    console.log(`Found data at path: ${path}`);
+                    const data = snapshot.val();
+                    console.log('Raw data:', data);
+                    
+                    // Clear existing options
+                    jobSelect.innerHTML = '<option value="">Choose a job...</option>';
+                    
+                    if (Array.isArray(data)) {
+                        // Handle array format
+                        data.forEach((job, index) => {
+                            if (job && (job.title || job.jobTitle || job.name)) {
+                                const option = document.createElement('option');
+                                const title = job.title || job.jobTitle || job.name || `Job ${index + 1}`;
+                                option.value = title;
+                                option.textContent = title;
+                                jobSelect.appendChild(option);
+                            }
+                        });
+                        console.log(`Loaded ${data.length} jobs from array`);
+                        jobsFound = true;
+                        break;
+                    } else if (typeof data === 'object') {
+                        // Handle object format - check if there's a nested jobs array
+                        if (data.jobs && Array.isArray(data.jobs)) {
+                            // Handle nested structure like {jobs: [...]}
+                            data.jobs.forEach((job, index) => {
+                                if (job && (job.title || job.jobTitle || job.name)) {
+                                    const option = document.createElement('option');
+                                    const title = job.title || job.jobTitle || job.name || `Job ${index + 1}`;
+                                    option.value = title;
+                                    option.textContent = title;
+                                    jobSelect.appendChild(option);
+                                }
+                            });
+                            console.log(`Loaded ${data.jobs.length} jobs from nested jobs array`);
+                            jobsFound = true;
+                            break;
+                        } else {
+                            // Handle flat object format
+                            const jobs = Object.keys(data);
+                            jobs.forEach(jobId => {
+                                const job = data[jobId];
+                                if (job && (job.title || job.jobTitle || job.name)) {
+                                    const option = document.createElement('option');
+                                    const title = job.title || job.jobTitle || job.name || jobId;
+                                    option.value = title;
+                                    option.textContent = title;
+                                    jobSelect.appendChild(option);
+                                }
+                            });
+                            console.log(`Loaded ${jobs.length} jobs from flat object`);
+                            jobsFound = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            if (!jobsFound) {
+                console.log('No jobs found in any of the expected paths');
+                // Let's check what's actually in the root
+                const rootSnapshot = await get(dbRef);
+                if (rootSnapshot.exists()) {
+                    console.log('Root database structure:', Object.keys(rootSnapshot.val()));
+                }
+                
+                // No jobs found, add default message
+                jobSelect.innerHTML = '<option value="">Choose a job...</option>';
+                const option = document.createElement('option');
+                option.value = "";
+                option.textContent = "No jobs available at the moment";
+                option.disabled = true;
+                jobSelect.appendChild(option);
+            }
+            
+        } catch (error) {
+            console.error('Error loading jobs:', error);
+            
+            // Show error and fallback options
+            jobSelect.innerHTML = '<option value="">Choose a job...</option>';
+            const fallbackJobs = [
+                'Data Entry', 'Customer Service', 'Management', 
+                'Marketing & Sale', 'Human Resource', 'Finance'
+            ];
+            
+            fallbackJobs.forEach(jobTitle => {
+                const option = document.createElement('option');
+                option.value = jobTitle;
+                option.textContent = jobTitle;
+                jobSelect.appendChild(option);
+            });
+            
+            console.log('Added fallback jobs due to error');
+        }
+    };
+
+    // Real-time validation functions
+    const validateFullName = () => {
+        const fullName = document.getElementById("fullname").value.trim();
+        if (!fullName) {
+            document.getElementById("fullNameWarning").style.display = "block";
+        } else {
+            document.getElementById("fullNameWarning").style.display = "none";
+        }
+    };
+
+    const validateEmail = () => {
+        const email = document.getElementById("email").value.trim();
+        if (!email) {
+            document.getElementById("emailWarning").style.display = "block";
+        } else {
+            document.getElementById("emailWarning").style.display = "none";
+        }
+    };
+
+    const validatePhone = () => {
+        const phone = document.getElementById("phone").value.trim();
+        if (!phone) {
+            document.getElementById("phoneWarning").style.display = "block";
+        } else {
+            document.getElementById("phoneWarning").style.display = "none";
+        }
+    };
+
+    const validateJobSelect = () => {
+        const jobSelect = document.getElementById("jobselect").value;
+        if (!jobSelect) {
+            document.getElementById("jobSelectWarning").style.display = "block";
+        } else {
+            document.getElementById("jobSelectWarning").style.display = "none";
+        }
+    };
+
+    const validateCountry = () => {
+        const country = document.getElementById("country").value;
+        if (!country) {
+            document.getElementById("countryWarning").style.display = "block";
+        } else {
+            document.getElementById("countryWarning").style.display = "none";
+        }
+    };
+
+    // Hide warning functions
+    const hideFullNameWarning = () => {
+        document.getElementById("fullNameWarning").style.display = "none";
+    };
+
+    const hideEmailWarning = () => {
+        document.getElementById("emailWarning").style.display = "none";
+    };
+
+    const hidePhoneWarning = () => {
+        document.getElementById("phoneWarning").style.display = "none";
+    };
+
+    const hideJobSelectWarning = () => {
+        document.getElementById("jobSelectWarning").style.display = "none";
+    };
+
+    const hideCountryWarning = () => {
+        document.getElementById("countryWarning").style.display = "none";
+    };
 
     // Function to convert file to Base64
     const fileToBase64 = (file) => {
@@ -189,6 +469,7 @@
             const fullName = document.getElementById('fullname').value;
             const email = document.getElementById('email').value;
             const phone = document.getElementById('phone').value;
+            const country = document.getElementById('country').value;
             const jobSelected = document.getElementById('jobselect').value;
             const resumeFile = document.getElementById('resume').files[0];
             const profileImgFile = document.getElementById('profileimg').files[0];
@@ -196,8 +477,8 @@
             const coverLetter = document.getElementById('coverletter').value;
 
             // Validate required fields
-            if (!fullName || !email || !jobSelected) {
-                alert('Please fill in all required fields (Full Name, Email, and Job Selection)');
+            if (!fullName || !email || !country || !jobSelected) {
+                showError('Missing Information', 'Please fill in all required fields (Full Name, Email, Country, and Job Selection)');
                 submitButton.disabled = false;
                 submitButton.textContent = 'Submit Application';
                 return;
@@ -205,7 +486,7 @@
 
             // Email validation
             if (!email.includes('@')) {
-                alert('Please enter a valid email address');
+                showError('Invalid Email', 'Please enter a valid email address');
                 submitButton.disabled = false;
                 submitButton.textContent = 'Submit Application';
                 return;
@@ -223,7 +504,7 @@
 
             if (profileImgFile) {
                 profileImgBase64 = await fileToBase64(profileImgFile);
-                
+
             }
 
             if (identityCardFile) {
@@ -236,6 +517,7 @@
                 fullName,
                 email,
                 phone,
+                country,
                 jobSelected,
                 coverLetter,
                 resumeData: resumeBase64,
@@ -245,7 +527,7 @@
                 status: 'pending'
             };
 
-           
+
 
             // Store in Realtime Database
             const applicationsRef = ref(database, 'jobApplications');
@@ -270,24 +552,51 @@
             e.preventDefault();
             submitApplication();
         });
+        
+        // Load available jobs from database
+        loadAvailableJobs();
     });
 
-      document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const log = document.getElementById("Signupin");
         const logout = document.getElementById("signout");
-        
-        const user = JSON.parse(sessionStorage.getItem('user'));
-        console.log(user);
 
-        if (user) {
-            log.style.display = 'none';
-        
+        const user = JSON.parse(sessionStorage.getItem('user'));
+
+        // Check if user is authenticated
+        if (!user) {
+            // User is not logged in, show login modal and navigate to login page
+            const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+            loginModal.show();
+
+            // Navigate after 3 seconds
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 3000);
+            return;
         }
-        
+
+        // User is authenticated, hide login button
+        if (log) {
+            log.style.display = 'none';
+        }
     });
 
-    // Make function available globally
+    // Make functions available globally
     window.submitApplication = submitApplication;
+    window.showError = showError;
+    window.showSuccess = showSuccess;
+    window.loadAvailableJobs = loadAvailableJobs;
+    window.validateFullName = validateFullName;
+    window.validateEmail = validateEmail;
+    window.validatePhone = validatePhone;
+    window.validateCountry = validateCountry;
+    window.validateJobSelect = validateJobSelect;
+    window.hideFullNameWarning = hideFullNameWarning;
+    window.hideEmailWarning = hideEmailWarning;
+    window.hidePhoneWarning = hidePhoneWarning;
+    window.hideCountryWarning = hideCountryWarning;
+    window.hideJobSelectWarning = hideJobSelectWarning;
 </script>
 
 </html>

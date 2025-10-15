@@ -79,8 +79,9 @@
                 They use our platform to explore openings that match their skills and interests. Each day,
                 more than 140,000 job applications are submitted through our site.
             </p>
-            <div class="w-100 d-flex bg-white gap-3 py-1  me-lg-5 ps-3" style="height: 35px; ">
-                <select class="w-25" id="countryFilter" onchange="searchJobs()" style="border: 2px solid rgb(11, 219, 11);color: rgb(25,135,84);">
+            <div class="w-100 d-flex bg-white gap-3 py-1  me-lg-5 ps-3 mt-lg-5 mt-2" style="height: 35px; ">
+                <select class="w-25" id="countryFilter" onchange="searchJobs()"
+                    style="border: 2px solid rgb(11, 219, 11);color: rgb(25,135,84);">
                     <option value="" class="fs-6" style="border: 2px solid rgb(11, 219, 11)">Country</option>
                     <option value="USA" class="fs-6" style="border: 2px solid rgb(11, 219, 11)">USA</option>
                     <option value="United Kingdom" class="fs-6">United Kingdom</option>
@@ -427,13 +428,13 @@
         resultsContainer.innerHTML = `
             <div class="container mt-4">
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-12 ">
                         <h3 class="mb-4">Search Results (${jobs.length} jobs found)</h3>
-                        <div class=" g-4">
+                        <div class=" g-4" >
                             ${jobs.map(job => `
-                                <div class="col">
+                                <div class="col mb-2">
                                     <div class="card shadow-sm h-100" style="background-color: rgb(236, 255, 236);">
-                                        <div class="card-body">
+                                        <div class="card-body >
                                             <h5 class="card-title text-success">${job.title}</h5>
                                             <div class="d-flex my-3 flex-wrap gap-2">
                                                 <span class="badge bg-success">${job.wage}</span>
@@ -442,7 +443,7 @@
                                             <h6 class="card-subtitle mb-2 text-muted">
                                                 <i class="bi bi-geo-alt"></i> ${job.location}
                                             </h6>
-                                            <p class="card-text">${job.description.substring(0, 100)}${job.description.length > 100 ? '...' : ''}</p>
+                                            <p class="card-text">${job.description} </p>
                                             <div class="mt-auto">
                                                 <button class="btn btn-outline-success w-100" onclick="applyForJob('${job.id}')">
                                                     Apply Now
@@ -474,7 +475,7 @@
     const applyForJob = (jobId) => {
         const user = JSON.parse(sessionStorage.getItem('user'));
         if (user) {
-            // Store selected job in session and redirect
+            // Store selected job in session and navigate
             sessionStorage.setItem('selectedJobId', jobId);
             window.location.href = 'apply.html';
         } else {
